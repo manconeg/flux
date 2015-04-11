@@ -4,9 +4,9 @@ var router = express();
 router.get('/:_id', function (request, response) {
     var _id = request.params["_id"];
     request.models.task.one({id: _id}, function(err, result) {
-        result.getUser(function (err, user) {
+        //result.getUser(function (err, user) {
             response.send(result.getJson());
-        });
+        //});
     });
 });
 

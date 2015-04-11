@@ -30,7 +30,7 @@ app.use(orm.express(process.env.DATABASE_URL, {
       id: Number,
       name: String
     });
-    models.client.hasOne('organization', models.organization, { reverse: "clients", autoFetch: true });
+    models.client.hasOne('organization', models.organization, { reverse: "clients" });
 
 
 
@@ -52,7 +52,7 @@ app.use(orm.express(process.env.DATABASE_URL, {
       id: Number,
       name: String
     });
-    models.project.hasOne('client', models.client, { reverse: "projects", autoFetch: true });
+    models.project.hasOne('client', models.client, { reverse: "projects" });
 
 
 
@@ -71,12 +71,13 @@ app.use(orm.express(process.env.DATABASE_URL, {
         setStarted: function() {
           this.started = this.startTime !== null;
 
+          var spent = this.timeSpent;
           if(this.started) {
             var diff = new Date() - Date.parse(this.startTime);
-            this.timeSpent += diff / 1000 / 60 / 60;
+            spent += diff / 1000 / 60 / 60;
           }
 
-          this.timeLeft = Math.floor((this.timeAllocated - this.timeSpent) * 60);
+          this.timeLeft = Math.floor((this.timeAllocated - spent) * 60);
         },
         getJson: function() {
           this.setStarted();
@@ -101,7 +102,7 @@ app.use(orm.express(process.env.DATABASE_URL, {
         }
       }
     });
-    models.task.hasOne('project', models.project, { reverse: "tasks", autoFetch: true });
+    models.task.hasOne('project', models.project, { reverse: "tasks" });
     models.task.hasOne('user', models.user, { reverse: "tasks" });
 
 
