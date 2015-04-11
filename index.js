@@ -70,6 +70,11 @@ app.use(orm.express(process.env.DATABASE_URL, {
       methods: {
         setStarted: function() {
           this.started = this.startTime !== null;
+
+          var diff = new Date() - Date.parse(this.startTime);
+          this.timeSpent += diff / 1000 / 60 / 60;
+
+
           this.timeLeft = Math.floor((this.timeAllocated - this.timeSpent) * 60);
         },
         getJson: function() {
