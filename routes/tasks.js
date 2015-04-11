@@ -11,7 +11,6 @@ router.get('/:_id', function (request, response) {
 });
 
 router.post('/:_id', function (request, response) {
-    stopAllTasks(request);
     var _id = request.params["_id"];
     request.models.task.one({id: _id}, function(err, result) {
         var started = request.body.started;
@@ -21,7 +20,7 @@ router.post('/:_id', function (request, response) {
             }
         } else {
             if(started === true) {
-
+                stopAllTasks(request);
                 result.start();
             }
         }

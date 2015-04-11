@@ -4,18 +4,19 @@ var router = express();
 router.get('/', function (request, response) {
   response.send({
     organizations: '/organizations',
+    organizationClients: '/organizations/:id/clients',
+    organizationUsers: '/organizations/:id/users',
 
-    clients: '/organizations/:id/clients',
-    client: '/clients/:id',
+    clients: '/clients/:id',
     clientTasks: '/clients/:id/tasks',
 
-    users: '/organizations/:id/users',
     user: '/users/:id',
     userTasks: '/user/:id/tasks',
 
-    tasks: '/tasks/:id',
+    projects: '/projects/:id',
+    projectTasks: '/projects/:id/tasks',
 
-    projects: '/projects/:id'
+    tasks: '/tasks/:id'
   });
 });
 

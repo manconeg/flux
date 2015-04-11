@@ -14,4 +14,11 @@ router.get('/:_id', function (request, response) {
     });
 });
 
+router.get('/:_id/tasks', function (request, response) {
+    var _id = request.params["_id"];
+    request.models.project.one({id: _id}, function(err, project) {
+        response.send(project.tasks);
+    });
+});
+
 module.exports = router;
