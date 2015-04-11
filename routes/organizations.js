@@ -20,7 +20,16 @@ router.get('/:_id', function (request, response) {
 router.get('/:_id/clients', function (request, response) {
     var _id = request.params["_id"];
     request.models.organization.one({id: _id}, function(err, result) {
-        result.getClients(function (err, results) {
+        result.getClients(function (err, clients) {
+            response.send(clients);
+        });
+    });
+});
+
+router.get('/:_id/users', function (request, response) {
+    var _id = request.params["_id"];
+    request.models.organization.one({id: _id}, function(err, result) {
+        result.getUsers(function (err, clients) {
             response.send(clients);
         });
     });

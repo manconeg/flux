@@ -4,10 +4,14 @@ var router = express();
 router.get('/', function (request, response) {
   response.send({
     organizations: '/organizations',
+
     clients: '/organizations/:id/clients',
-    tasks: '/organizations/:id/clients/tasks',
+    client: '/clients/:id',
+    clientTasks: '/clients/:id/tasks',
+
     users: '/organizations/:id/users',
-    userTasks: '/organizations/:id/users/tasks'
+    user: '/users/:id',
+    userTasks: '/user/:id/tasks'
   });
 });
 
