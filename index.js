@@ -1,27 +1,54 @@
 var express = require('express');
+var orm = require('orm');
 var app = express();
-var pg = require('pg');
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
-app.get('/db', function (request, response) {
-  console.log(process.env.DATABASE_URL);
-  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    console.log(err);
-    client.query('SELECT * FROM test_table', function(err, result) {
-      done();
-      if (err)
-      { console.error(err); response.send("Error " + err); }
-      else
-      { response.send(result.rows); }
+app.use(orm.express(process.env.DATABASE_URL, {
+  define: function (db, models, next) {
+    models.organization = db.define("organizations", {
+      id: Number
     });
-  });
-})
 
-app.get('/', function(request, response) {
-  response.send('Hello World!');
-});
+
+
+
+    models.client = db.define("clients", {
+      id: Number,
+      name: String
+    });
+    models.client.hasOne('organization', models.organization, { reverse: "clients" });
+
+
+
+
+    models.user = db.define("users", {
+      id: Number,
+      name: String,
+      email: String
+    });
+    models.user.hasOne('organization', models.organization, { reverse: "users" });
+
+
+
+
+    models.task = db.define("tasks", {
+      id: Number,
+      name: String
+    });
+    models.task.hasOne('client', models.client, { reverse: "tasks" });
+    models.task.hasOne('user', models.user, { reverse: "tasks" });
+
+
+    next();
+  }
+}));
+
+app.use('/', require('./routes/index'));
+app.use('/clients', require('./routes/clients'));
+app.use('/organizations', require('./routes/organizations'));
+app.use('/users', require('./routes/users'));
 
 app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'));
