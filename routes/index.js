@@ -11,7 +11,9 @@ router.get('/', function (request, response) {
 
     users: '/organizations/:id/users',
     user: '/users/:id',
-    userTasks: '/user/:id/tasks'
+    userTasks: '/user/:id/tasks',
+
+    tasks: '/tasks/:id'
   });
 });
 
