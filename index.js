@@ -95,6 +95,7 @@ app.use(orm.express(process.env.DATABASE_URL, {
       },
       hooks: {
         afterLoad: function (next) {
+          if(!this.timeSpent) this.timeSpent = 0;
           this.setStarted();
           return next();
         }
