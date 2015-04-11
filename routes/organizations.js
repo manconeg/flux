@@ -11,9 +11,7 @@ router.get('/', function (request, response) {
 router.get('/:_id', function (request, response) {
     var _id = request.params["_id"];
     request.models.organization.one({id: _id}, function(err, organization) {
-        organization.getClients(function (err, results) {
-            response.send(organization);
-        });
+        response.send(organization);
     });
 });
 
@@ -29,8 +27,8 @@ router.get('/:_id/clients', function (request, response) {
 router.get('/:_id/users', function (request, response) {
     var _id = request.params["_id"];
     request.models.organization.one({id: _id}, function(err, result) {
-        result.getUsers(function (err, clients) {
-            response.send(clients);
+        result.getUsers(function (err, users) {
+            response.send(users);
         });
     });
 });

@@ -30,7 +30,7 @@ app.use(orm.express(process.env.DATABASE_URL, {
       id: Number,
       name: String
     });
-    models.client.hasOne('organization', models.organization, { reverse: "clients" });
+    models.client.hasOne('organization', models.organization, { reverse: "clients", autoFetch: true });
 
 
 
@@ -41,6 +41,20 @@ app.use(orm.express(process.env.DATABASE_URL, {
       email: String
     });
     models.user.hasOne('organization', models.organization, { reverse: "users" });
+
+
+
+
+
+
+
+    models.project = db.define("projects", {
+      id: Number,
+      name: String
+    });
+    models.project.hasOne('client', models.client, { reverse: "projects", autoFetch: true });
+
+
 
 
 
@@ -79,7 +93,7 @@ app.use(orm.express(process.env.DATABASE_URL, {
         }
       }
     });
-    models.task.hasOne('client', models.client, { reverse: "tasks" });
+    models.task.hasOne('project', models.project, { reverse: "tasks", autoFetch: true });
     models.task.hasOne('user', models.user, { reverse: "tasks" });
 
 
@@ -92,6 +106,7 @@ app.use('/clients', require('./routes/clients'));
 app.use('/organizations', require('./routes/organizations'));
 app.use('/users', require('./routes/users'));
 app.use('/tasks', require('./routes/tasks'));
+app.use('/projects', require('./routes/projects'));
 
 app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'));

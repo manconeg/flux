@@ -13,7 +13,9 @@ router.get('/', function (request, response) {
     user: '/users/:id',
     userTasks: '/user/:id/tasks',
 
-    tasks: '/tasks/:id'
+    tasks: '/tasks/:id',
+
+    projects: '/projects/:id'
   });
 });
 
