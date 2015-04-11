@@ -8,6 +8,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
+
 app.use(orm.express(process.env.DATABASE_URL, {
   define: function (db, models, next) {
     models.organization = db.define("organizations", {
@@ -46,9 +54,28 @@ app.use(orm.express(process.env.DATABASE_URL, {
       startTime: {type: 'date', mapsTo: 'start_time'}
     }, {
       methods: {
-        getJson: function() {
+        setStarted: function() {
           this.started = this.startTime !== null;
+        },
+        getJson: function() {
+          this.setStarted();
           return this;
+        },
+        stop: function() {
+          var diff = new Date() - Date.parse(this.startTime);
+          this.timeSpent += diff / 1000 / 60 / 60;
+          this.startTime = null;
+          this.started = false;
+        },
+        start: function() {
+          this.startTime = new Date();
+          this.started = true;
+        }
+      },
+      hooks: {
+        afterLoad: function (next) {
+          this.setStarted();
+          return next();
         }
       }
     });

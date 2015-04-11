@@ -11,18 +11,18 @@ router.get('/:_id', function (request, response) {
 });
 
 router.post('/:_id', function (request, response) {
+    stopAllTasks(request);
     var _id = request.params["_id"];
     request.models.task.one({id: _id}, function(err, result) {
         var started = request.body.started;
         if(result.startTime) {
             if(started === false) {
-                var diff = new Date() - Date.parse(result.startTime);
-                result.timeSpent += diff / 1000 / 60 / 60;
-                result.startTime = null;
+                result.stop();
             }
         } else {
             if(started === true) {
-                result.startTime = new Date();
+
+                result.start();
             }
         }
 
@@ -31,5 +31,12 @@ router.post('/:_id', function (request, response) {
         });
     });
 });
+
+function stopAllTasks(request) {
+    request.models.task.find({"not": [{start_time: null}]}).each(function(task) {
+        task.stop();
+        task.save();
+    });
+}
 
 module.exports = router;
